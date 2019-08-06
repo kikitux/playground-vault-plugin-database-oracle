@@ -15,5 +15,16 @@ go build -o vault-plugin-database-oracle ./plugin
 ls -alh vault-plugin-database-oracle
 ldd vault-plugin-database-oracle
 
+mkdir -p /usr/local/vault/plugins
+cp vault-plugin-database-oracle /usr/local/vault/plugins/
+
+sha256=($(sha256sum /usr/local/vault/plugins/vault-plugin-database-oracle))
+
+export VAULT_ADDR=http://localhost:8200
+
+/usr/local/bin/vault write sys/plugins/catalog/database/vault-plugin-database-oracle \
+	    sha_256=${sha256} \
+	        command="vault-plugin-database-oracle"
+
 popd
 popd
